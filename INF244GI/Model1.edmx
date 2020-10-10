@@ -1,0 +1,373 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GestionInventarioModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ALMACEN">
+          <Key>
+            <PropertyRef Name="ID_ALMACEN" />
+          </Key>
+          <Property Name="ID_ALMACEN" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ESTADO" Type="char" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ARTICULO">
+          <Key>
+            <PropertyRef Name="ID_ARTICULO" />
+          </Key>
+          <Property Name="ID_ARTICULO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DESCRIPCION_ARTICULO" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="EXISTENCIA_ARTICULO" Type="bit" Nullable="false" />
+          <Property Name="ID_TIPOINVENTARIO" Type="int" Nullable="false" />
+          <Property Name="COSTOUNITARIO" Type="int" Nullable="false" />
+          <Property Name="ESTADO" Type="char" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EXISTENCIAxALMACEN">
+          <Key>
+            <PropertyRef Name="ID_ARTICULO" />
+            <PropertyRef Name="ID_ALMACEN" />
+          </Key>
+          <Property Name="ID_ARTICULO" Type="int" Nullable="false" />
+          <Property Name="ID_ALMACEN" Type="int" Nullable="false" />
+          <Property Name="CANTIDAD" Type="char" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="TIPOINVENTARIO">
+          <Key>
+            <PropertyRef Name="ID_TIPOINVENTARIO" />
+          </Key>
+          <Property Name="ID_TIPOINVENTARIO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CUENTA_CONTABLE" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="ESTADO" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TRANSACCION">
+          <Key>
+            <PropertyRef Name="ID_TRANSACCION" />
+          </Key>
+          <Property Name="ID_TRANSACCION" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TIPO_TRANSACCION" Type="varchar" MaxLength="50" />
+          <Property Name="ID_ARTICULO" Type="int" />
+          <Property Name="FECHA" Type="date" />
+          <Property Name="CANTIDAD" Type="int" />
+          <Property Name="MONTO" Type="char" MaxLength="10" />
+        </EntityType>
+        <Association Name="FK_ARTICULO_TIPOINVENTARIO">
+          <End Role="TIPOINVENTARIO" Type="Self.TIPOINVENTARIO" Multiplicity="1" />
+          <End Role="ARTICULO" Type="Self.ARTICULO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TIPOINVENTARIO">
+              <PropertyRef Name="ID_TIPOINVENTARIO" />
+            </Principal>
+            <Dependent Role="ARTICULO">
+              <PropertyRef Name="ID_TIPOINVENTARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EXISTENCIAxALMACEN_ALMACEN">
+          <End Role="ALMACEN" Type="Self.ALMACEN" Multiplicity="1" />
+          <End Role="EXISTENCIAxALMACEN" Type="Self.EXISTENCIAxALMACEN" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ALMACEN">
+              <PropertyRef Name="ID_ALMACEN" />
+            </Principal>
+            <Dependent Role="EXISTENCIAxALMACEN">
+              <PropertyRef Name="ID_ALMACEN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EXISTENCIAxALMACEN_ARTICULO">
+          <End Role="ARTICULO" Type="Self.ARTICULO" Multiplicity="1" />
+          <End Role="EXISTENCIAxALMACEN" Type="Self.EXISTENCIAxALMACEN" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ARTICULO">
+              <PropertyRef Name="ID_ARTICULO" />
+            </Principal>
+            <Dependent Role="EXISTENCIAxALMACEN">
+              <PropertyRef Name="ID_ARTICULO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TRANSACCION_ARTICULO">
+          <End Role="ARTICULO" Type="Self.ARTICULO" Multiplicity="0..1" />
+          <End Role="TRANSACCION" Type="Self.TRANSACCION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ARTICULO">
+              <PropertyRef Name="ID_ARTICULO" />
+            </Principal>
+            <Dependent Role="TRANSACCION">
+              <PropertyRef Name="ID_ARTICULO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GestionInventarioModelStoreContainer">
+          <EntitySet Name="ALMACEN" EntityType="Self.ALMACEN" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ARTICULO" EntityType="Self.ARTICULO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EXISTENCIAxALMACEN" EntityType="Self.EXISTENCIAxALMACEN" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TIPOINVENTARIO" EntityType="Self.TIPOINVENTARIO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TRANSACCION" EntityType="Self.TRANSACCION" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ARTICULO_TIPOINVENTARIO" Association="Self.FK_ARTICULO_TIPOINVENTARIO">
+            <End Role="TIPOINVENTARIO" EntitySet="TIPOINVENTARIO" />
+            <End Role="ARTICULO" EntitySet="ARTICULO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EXISTENCIAxALMACEN_ALMACEN" Association="Self.FK_EXISTENCIAxALMACEN_ALMACEN">
+            <End Role="ALMACEN" EntitySet="ALMACEN" />
+            <End Role="EXISTENCIAxALMACEN" EntitySet="EXISTENCIAxALMACEN" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EXISTENCIAxALMACEN_ARTICULO" Association="Self.FK_EXISTENCIAxALMACEN_ARTICULO">
+            <End Role="ARTICULO" EntitySet="ARTICULO" />
+            <End Role="EXISTENCIAxALMACEN" EntitySet="EXISTENCIAxALMACEN" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TRANSACCION_ARTICULO" Association="Self.FK_TRANSACCION_ARTICULO">
+            <End Role="ARTICULO" EntitySet="ARTICULO" />
+            <End Role="TRANSACCION" EntitySet="TRANSACCION" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GestionInventarioModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ALMACEN">
+          <Key>
+            <PropertyRef Name="ID_ALMACEN" />
+          </Key>
+          <Property Name="ID_ALMACEN" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ESTADO" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="EXISTENCIAxALMACEN" Relationship="Self.FK_EXISTENCIAxALMACEN_ALMACEN" FromRole="ALMACEN" ToRole="EXISTENCIAxALMACEN" />
+        </EntityType>
+        <EntityType Name="ARTICULO">
+          <Key>
+            <PropertyRef Name="ID_ARTICULO" />
+          </Key>
+          <Property Name="ID_ARTICULO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DESCRIPCION_ARTICULO" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EXISTENCIA_ARTICULO" Type="Boolean" Nullable="false" />
+          <Property Name="ID_TIPOINVENTARIO" Type="Int32" Nullable="false" />
+          <Property Name="COSTOUNITARIO" Type="Int32" Nullable="false" />
+          <Property Name="ESTADO" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="TIPOINVENTARIO" Relationship="Self.FK_ARTICULO_TIPOINVENTARIO" FromRole="ARTICULO" ToRole="TIPOINVENTARIO" />
+          <NavigationProperty Name="EXISTENCIAxALMACEN" Relationship="Self.FK_EXISTENCIAxALMACEN_ARTICULO" FromRole="ARTICULO" ToRole="EXISTENCIAxALMACEN" />
+          <NavigationProperty Name="TRANSACCION" Relationship="Self.FK_TRANSACCION_ARTICULO" FromRole="ARTICULO" ToRole="TRANSACCION" />
+        </EntityType>
+        <EntityType Name="EXISTENCIAxALMACEN">
+          <Key>
+            <PropertyRef Name="ID_ARTICULO" />
+            <PropertyRef Name="ID_ALMACEN" />
+          </Key>
+          <Property Name="ID_ARTICULO" Type="Int32" Nullable="false" />
+          <Property Name="ID_ALMACEN" Type="Int32" Nullable="false" />
+          <Property Name="CANTIDAD" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ALMACEN" Relationship="Self.FK_EXISTENCIAxALMACEN_ALMACEN" FromRole="EXISTENCIAxALMACEN" ToRole="ALMACEN" />
+          <NavigationProperty Name="ARTICULO" Relationship="Self.FK_EXISTENCIAxALMACEN_ARTICULO" FromRole="EXISTENCIAxALMACEN" ToRole="ARTICULO" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TIPOINVENTARIO">
+          <Key>
+            <PropertyRef Name="ID_TIPOINVENTARIO" />
+          </Key>
+          <Property Name="ID_TIPOINVENTARIO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CUENTA_CONTABLE" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="ESTADO" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ARTICULO" Relationship="Self.FK_ARTICULO_TIPOINVENTARIO" FromRole="TIPOINVENTARIO" ToRole="ARTICULO" />
+        </EntityType>
+        <EntityType Name="TRANSACCION">
+          <Key>
+            <PropertyRef Name="ID_TRANSACCION" />
+          </Key>
+          <Property Name="ID_TRANSACCION" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TIPO_TRANSACCION" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ID_ARTICULO" Type="Int32" />
+          <Property Name="FECHA" Type="DateTime" Precision="0" />
+          <Property Name="CANTIDAD" Type="Int32" />
+          <Property Name="MONTO" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="ARTICULO" Relationship="Self.FK_TRANSACCION_ARTICULO" FromRole="TRANSACCION" ToRole="ARTICULO" />
+        </EntityType>
+        <Association Name="FK_EXISTENCIAxALMACEN_ALMACEN">
+          <End Role="ALMACEN" Type="Self.ALMACEN" Multiplicity="1" />
+          <End Role="EXISTENCIAxALMACEN" Type="Self.EXISTENCIAxALMACEN" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ALMACEN">
+              <PropertyRef Name="ID_ALMACEN" />
+            </Principal>
+            <Dependent Role="EXISTENCIAxALMACEN">
+              <PropertyRef Name="ID_ALMACEN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ARTICULO_TIPOINVENTARIO">
+          <End Role="TIPOINVENTARIO" Type="Self.TIPOINVENTARIO" Multiplicity="1" />
+          <End Role="ARTICULO" Type="Self.ARTICULO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TIPOINVENTARIO">
+              <PropertyRef Name="ID_TIPOINVENTARIO" />
+            </Principal>
+            <Dependent Role="ARTICULO">
+              <PropertyRef Name="ID_TIPOINVENTARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EXISTENCIAxALMACEN_ARTICULO">
+          <End Role="ARTICULO" Type="Self.ARTICULO" Multiplicity="1" />
+          <End Role="EXISTENCIAxALMACEN" Type="Self.EXISTENCIAxALMACEN" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ARTICULO">
+              <PropertyRef Name="ID_ARTICULO" />
+            </Principal>
+            <Dependent Role="EXISTENCIAxALMACEN">
+              <PropertyRef Name="ID_ARTICULO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TRANSACCION_ARTICULO">
+          <End Role="ARTICULO" Type="Self.ARTICULO" Multiplicity="0..1" />
+          <End Role="TRANSACCION" Type="Self.TRANSACCION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ARTICULO">
+              <PropertyRef Name="ID_ARTICULO" />
+            </Principal>
+            <Dependent Role="TRANSACCION">
+              <PropertyRef Name="ID_ARTICULO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GestionInventarioEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ALMACEN" EntityType="Self.ALMACEN" />
+          <EntitySet Name="ARTICULO" EntityType="Self.ARTICULO" />
+          <EntitySet Name="EXISTENCIAxALMACEN" EntityType="Self.EXISTENCIAxALMACEN" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="TIPOINVENTARIO" EntityType="Self.TIPOINVENTARIO" />
+          <EntitySet Name="TRANSACCION" EntityType="Self.TRANSACCION" />
+          <AssociationSet Name="FK_EXISTENCIAxALMACEN_ALMACEN" Association="Self.FK_EXISTENCIAxALMACEN_ALMACEN">
+            <End Role="ALMACEN" EntitySet="ALMACEN" />
+            <End Role="EXISTENCIAxALMACEN" EntitySet="EXISTENCIAxALMACEN" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ARTICULO_TIPOINVENTARIO" Association="Self.FK_ARTICULO_TIPOINVENTARIO">
+            <End Role="TIPOINVENTARIO" EntitySet="TIPOINVENTARIO" />
+            <End Role="ARTICULO" EntitySet="ARTICULO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EXISTENCIAxALMACEN_ARTICULO" Association="Self.FK_EXISTENCIAxALMACEN_ARTICULO">
+            <End Role="ARTICULO" EntitySet="ARTICULO" />
+            <End Role="EXISTENCIAxALMACEN" EntitySet="EXISTENCIAxALMACEN" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TRANSACCION_ARTICULO" Association="Self.FK_TRANSACCION_ARTICULO">
+            <End Role="ARTICULO" EntitySet="ARTICULO" />
+            <End Role="TRANSACCION" EntitySet="TRANSACCION" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GestionInventarioModelStoreContainer" CdmEntityContainer="GestionInventarioEntities">
+          <EntitySetMapping Name="ALMACEN">
+            <EntityTypeMapping TypeName="GestionInventarioModel.ALMACEN">
+              <MappingFragment StoreEntitySet="ALMACEN">
+                <ScalarProperty Name="ID_ALMACEN" ColumnName="ID_ALMACEN" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="ESTADO" ColumnName="ESTADO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ARTICULO">
+            <EntityTypeMapping TypeName="GestionInventarioModel.ARTICULO">
+              <MappingFragment StoreEntitySet="ARTICULO">
+                <ScalarProperty Name="ID_ARTICULO" ColumnName="ID_ARTICULO" />
+                <ScalarProperty Name="DESCRIPCION_ARTICULO" ColumnName="DESCRIPCION_ARTICULO" />
+                <ScalarProperty Name="EXISTENCIA_ARTICULO" ColumnName="EXISTENCIA_ARTICULO" />
+                <ScalarProperty Name="ID_TIPOINVENTARIO" ColumnName="ID_TIPOINVENTARIO" />
+                <ScalarProperty Name="COSTOUNITARIO" ColumnName="COSTOUNITARIO" />
+                <ScalarProperty Name="ESTADO" ColumnName="ESTADO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EXISTENCIAxALMACEN">
+            <EntityTypeMapping TypeName="GestionInventarioModel.EXISTENCIAxALMACEN">
+              <MappingFragment StoreEntitySet="EXISTENCIAxALMACEN">
+                <ScalarProperty Name="ID_ARTICULO" ColumnName="ID_ARTICULO" />
+                <ScalarProperty Name="ID_ALMACEN" ColumnName="ID_ALMACEN" />
+                <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="GestionInventarioModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TIPOINVENTARIO">
+            <EntityTypeMapping TypeName="GestionInventarioModel.TIPOINVENTARIO">
+              <MappingFragment StoreEntitySet="TIPOINVENTARIO">
+                <ScalarProperty Name="ID_TIPOINVENTARIO" ColumnName="ID_TIPOINVENTARIO" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="CUENTA_CONTABLE" ColumnName="CUENTA_CONTABLE" />
+                <ScalarProperty Name="ESTADO" ColumnName="ESTADO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TRANSACCION">
+            <EntityTypeMapping TypeName="GestionInventarioModel.TRANSACCION">
+              <MappingFragment StoreEntitySet="TRANSACCION">
+                <ScalarProperty Name="ID_TRANSACCION" ColumnName="ID_TRANSACCION" />
+                <ScalarProperty Name="TIPO_TRANSACCION" ColumnName="TIPO_TRANSACCION" />
+                <ScalarProperty Name="ID_ARTICULO" ColumnName="ID_ARTICULO" />
+                <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+                <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+                <ScalarProperty Name="MONTO" ColumnName="MONTO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

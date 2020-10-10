@@ -1,0 +1,58 @@
+﻿@model INF244GI.TRANSACCION
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TRANSACCION</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TIPO_TRANSACCION)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TIPO_TRANSACCION)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FECHA)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FECHA)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CANTIDAD)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CANTIDAD)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MONTO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MONTO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ARTICULO.DESCRIPCION_ARTICULO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ARTICULO.DESCRIPCION_ARTICULO)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID_TRANSACCION }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
